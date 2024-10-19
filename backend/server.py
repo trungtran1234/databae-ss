@@ -6,10 +6,12 @@ from uagents.envelope import Envelope
 import json
 from db_tools import check_and_add_db_credentials
 
-AGENT_ADDRESS = "agent1q2s9fzzvknhuajeplqfp5zeff9ejmraxmcpcqpeup3kajwvkkxxwcqnhwt2"
+# Agent address
+AGENT_ADDRESS = "agent1qtafwkkm26h5gdkkz39pd5nnt604q96xh4hperynl085cwzquh0uyunffjz"
 
 app = FastAPI()
 
+# Define request model
 class TestRequest(Model):
     message: str
 
@@ -33,12 +35,12 @@ def read_root():
 
 @app.post("/endpoint")
 async def make_agent_call(req: Request):
-    model = TestRequest.parse_obj(await req.json())
     try:
+        model = TestRequest.parse_obj(await req.json())
         res = await agent_query(model)
-        return f"successful call - agent response: {res}"
+        return {"status": "successful", "agent_response": res}
     except Exception as e:
-        return f"unsuccessful agent call: {str(e)}"
+        return {"status": "unsuccessful", "error": str(e)}
 
 # endpoint that takes in database connection details,
 # checks if there is the db connection is valid,
