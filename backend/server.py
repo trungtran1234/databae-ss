@@ -39,7 +39,7 @@ class DbBodyModel(BaseModel):
 
 
 async def agent_query(req):
-    response = await query(destination=AGENT_ADDRESS, message=req, timeout=5)
+    response = await query(destination=AGENT_ADDRESS, message=req, timeout=20)
     if isinstance(response, Envelope):
         data = json.loads(response.decode_payload())
         return data["text"]
@@ -51,6 +51,8 @@ def read_root():
 
 @app.post("/endpoint")
 async def make_agent_call(req: Request):
+    if os.path.exists("response.txt"):
+        os.remove("response.txt")
     res = None
     try:
         with open(os.path.join("status.txt"), "w") as file:
