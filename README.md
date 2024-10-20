@@ -9,6 +9,9 @@ the complexities of an SQL database. Tell Databae what you want to query
 your database in plain English, and Databae will automatically query the 
 database and visualize the results for you to understand.
 
+![Databae](https://github.com/user-attachments/assets/cb7e0d4d-fae8-4bea-bcdf-f2a91b8f8bb5)
+
+
 ## Instructions 
 
 ### Frontend 
