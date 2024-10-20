@@ -15,7 +15,9 @@ const DatabaseConnection: React.FC<DatabaseConnectionProps> = () => {
         databaseName: '',
     });
 
+
     const [isMounted, setIsMounted] = useState<boolean>(false);
+
 
     const router = useRouter();
     const [error, setError] = useState<string | null>(null); // To store error messages
