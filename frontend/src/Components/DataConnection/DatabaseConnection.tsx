@@ -82,7 +82,7 @@ const DatabaseConnection: React.FC<DatabaseConnectionProps> = () => {
     return (
         <main className="flex flex-col text-sm text-gray-500 max-h-[600px] min-w-[440px] justify-center items-center">
             {isLoading ? (
-                <div className ="h-40 w-40"><l-spiral></l-spiral></div>
+                <l-spiral></l-spiral>
             ) : (
                 <motion.section
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -91,7 +91,6 @@ const DatabaseConnection: React.FC<DatabaseConnectionProps> = () => {
                         type: "spring",
                         stiffness: 100,
                         damping: 35,
-                        delay: 1.5
                     }}
                     className="flex flex-col items-center px-6 py-6 max-w-[500px] w-full min-h-fit bg-white rounded-[32px] shadow-[8px_8px_4px_rgba(0,0,0,0.25)]"
                 >
