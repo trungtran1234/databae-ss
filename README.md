@@ -1,5 +1,3 @@
-# databae
-
 # Databae - Cal Hacks 11.0
 
 ## What is Databae?
