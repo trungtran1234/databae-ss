@@ -7,13 +7,15 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = ">=3.12,<=3.13"
+python = ">=3.10,<=3.13"
 poetry = "^1.8.4"
 fastapi = "^0.115.3"
 python-dotenv = "^1.0.1"
 uvicorn = "^0.32.0"
 crewai = "^0.76.2"
 crewai-tools = "^0.13.2"
+langchain-community = "^0.3.3"
+langchain-groq = "^0.2.0"
 
 
 [build-system]
