@@ -6,7 +6,6 @@ from static.llm import llm
 def query_generator(llm, tools, system_message: str, user_message: str):
     """Query Generator Agent to return an SQL query based on user's natural language input"""
     
-    # Define the prompt template using system instructions and user's natural language input
     prompt = ChatPromptTemplate.from_messages(
         [
             (
