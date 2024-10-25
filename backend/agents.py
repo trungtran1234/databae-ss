@@ -1,12 +1,18 @@
 from crewai import Agent, LLM, Task, Crew
 from dotenv import load_dotenv
+import os
+from langchain_groq import ChatGroq
+
 
 load_dotenv()
 
-llm = LLM(model="gpt-4", temperature=0.7)
-agent = Agent(
-  role='Data Analyst',
-  goal='Extract actionable insights',
+llm=ChatGroq(temperature=0,
+             model_name="llama3-70b-8192",
+             api_key=os.getenv("GROQ_API_KEY"))
+
+manager = Agent(
+  role='Manager',
+  goal='',
   backstory="""You're a data analyst at a large company.
     You're responsible for analyzing data and providing insights
     to the business.
@@ -14,12 +20,6 @@ agent = Agent(
     performance of our marketing campaigns.""",
 
   llm=llm
-)
-
-task = Task(
-    description='Find and summarize the latest and most relevant news on AI',
-    agent=agent,
-    expected_output='A bullet list summary of the top 5 most important AI news',
 )
 
 crew = Crew(
