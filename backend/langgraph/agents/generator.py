@@ -3,6 +3,7 @@ from langgraph.graph import END, START, StateGraph
 from langgraph.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
 from langgraph.static.llm import llm
 
+
 def query_generator(llm, tools, system_message: str, user_message: str):
     """Query Generator Agent to return an SQL query based on user's natural language input"""
     
