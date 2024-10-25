@@ -4,7 +4,7 @@ from agent_network.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
 from agent_network.static.llm import llm
 
 
-def query_generator(llm, tools, system_message: str, user_message: str):
+def query_generator(llm, system_message: str, user_message: str):
     """Query Generator Agent to return an SQL query based on user's natural language input"""
     
     prompt = ChatPromptTemplate.from_messages(
@@ -24,8 +24,8 @@ def query_generator(llm, tools, system_message: str, user_message: str):
         "content": user_message 
     }]).to_messages()
     
-    response = llm(message_payload)
+    response = llm.invoke(message_payload)
     
-    sql_query = response["choices"][0]["message"]["content"].strip()
+    sql_query = response.content.strip()
     
     return sql_query
