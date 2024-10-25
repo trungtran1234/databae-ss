@@ -1,7 +1,7 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langgraph.graph import END, START, StateGraph
-from langgraph.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
-from langgraph.static.llm import llm
+from agent_network.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
+from agent_network.static.llm import llm
 
 
 def query_generator(llm, tools, system_message: str, user_message: str):

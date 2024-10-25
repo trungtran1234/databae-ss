@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
-from langgraph.agents.agent_class import QueryRequest
-from langgraph.agents.generator import query_generator
-from langgraph.static.llm import llm
+from agent_network.agents.agent_class import QueryRequest
+from agent_network.agents.generator import query_generator
+from agent_network.static.llm import llm
 
 app = FastAPI()
 
