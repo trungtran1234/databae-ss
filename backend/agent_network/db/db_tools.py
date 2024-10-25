@@ -8,11 +8,11 @@ import os
 def create_connection():
     connection = None
 
-    if not os.path.abspath('db_credentials.json'):
+    if not os.path.abspath('agent_network/db/db_credentials.json'):
         print("no db credentials found")
         return None
     
-    with open('db_credentials.json') as f:
+    with open('agent_network/db/db_credentials.json') as f:
         data = json.load(f)
         host_name = data["host_name"]
         user_name = data["user_name"]
