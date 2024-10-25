@@ -9,9 +9,9 @@ from langchain_core.messages import (
 )
 import operator
 
-# class QueryRequest(BaseModel):
-#     user_query: str
-#     system_message: str
+class QueryRequest(BaseModel):
+    user_query: str
+    system_message: str
 
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], operator.add]
