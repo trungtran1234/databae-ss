@@ -7,6 +7,7 @@ from backend.agent_network.agents.agent_helper import agent_node
 
 
 def create_query_generator(llm, system_message: str, user_message: str):
+
     """Query Generator Agent to return an SQL query based on user's natural language input"""
     
     prompt = ChatPromptTemplate.from_messages(
