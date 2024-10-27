@@ -1,18 +1,18 @@
 import os
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import END, START, StateGraph
-from agents.agent_helper import AgentState
-from tools.pie_chart_tool import pie_chart_generator
-from tools.table_tool import table_generator
-from tools.predictive_tool import prediction_model
-from static.llm import llm
-from agents.agent_helper import agent_node
-from agents.manager import create_manager
-from agents.respondent import create_respondent
-from agents.generator import create_query_generator
-from agents.checker import create_checker
-from agents.executor import create_executor
-from agents.analyzer import create_analyzer
+from agent_network.agents.agent_helper import AgentState
+from agent_network.tools.pie_chart_tool import pie_chart_generator
+from agent_network.tools.table_tool import table_generator
+from agent_network.tools.predictive_tool import prediction_model
+from agent_network.static.llm import llm
+from agent_network.agents.agent_helper import agent_node
+from agent_network.agents.manager import create_manager
+from agent_network.agents.respondent import create_respondent
+from agent_network.agents.generator import create_query_generator
+from agent_network.agents.checker import create_checker
+from agent_network.agents.executor import create_executor
+from agent_network.agents.analyzer import create_analyzer
 import functools
 
 
@@ -115,7 +115,7 @@ workflow.add_edge(START, "Manager")
 # Compile the graph
 graph = workflow.compile()
 
-graph_image_path = os.path.join("agent_network", "graph_updated.png")
+graph_image_path = os.path.join(os.getcwd(), "graph", "agent_network.png")
 
 # Generate and save the graph as an image
 png_data = graph.get_graph(xray=True).draw_mermaid_png()
