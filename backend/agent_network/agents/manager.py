@@ -6,30 +6,38 @@ from agent_network.db.db_tools import get_all_schemas
 from agent_network.agents.agent_helper import agent_node
 
 
-def create_manager(llm, user_message: str, schema: str):
-    """Manager Agent to return if the user query is requesting SQL query or general information"""
+def manager_node(state):
+    """Manager Agent to handle SQL query generation and manage the checker loop."""
     
-    system_message = f"The following is the schema of the database: {schema}. Use this schema to interpret the user query."
+    # Check if the checker has failed too many times
+    if state.get("checkerCount") > 3:
+        # Stop retrying and send to user response if too many failures
+        print("Too many checker failures, sending to user_respondent.")
+        state["next"] = "user_respondent"
+        return state
+    
+    if state.get("sender") == 'Checker':
+        prompt = MANAGER_AGENT_INSTRUCTIONS + f"The given SQL query is not correct: {state['sql_query']}, give feedback on how to fix it. \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
 
-    prompt = ChatPromptTemplate.from_messages(
-        [
-            (
-                "system",
-                MANAGER_AGENT_INSTRUCTIONS,
-            ),
-            MessagesPlaceholder(variable_name="messages"),
-        ]
-    )
+    # Create the system prompt for the manager agent
+    prompt = MANAGER_AGENT_INSTRUCTIONS + f" \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
     
-    prompt = prompt.partial(system_message=system_message)
+    # Invoke the LLM to process the prompt
+    response = llm.invoke(prompt)
     
-    message_payload = prompt.format_prompt(messages=[{
-        "role": "user",
-        "content": user_message 
-    }]).to_messages()
-    
-    response = llm.invoke(message_payload)
-    
+    # Get the LLM response (instructions) and update the state
     manager_response = response.content.strip()
-    
-    return manager_response
+    state["manager_instructions"] = manager_response
+
+    print('Manager instructions: ', state['manager_instructions'])
+
+    # Decide next step based on the instructions
+    if "NOT_QUERY" in state["manager_instructions"]:
+        # If not a query, send to the user respondent for further handling
+        state["next"] = "user_respondent"
+    else:
+        # If the query needs to be validated, send it back to the checker
+        print("Sending to generator.")
+        state["next"] = "Generator"  # Go back to the checker for validation
+
+    return state
