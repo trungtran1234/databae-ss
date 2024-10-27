@@ -4,6 +4,7 @@ from agent_network.static.instructions import MANAGER_AGENT_INSTRUCTIONS
 from agent_network.static.llm import llm
 from agent_network.db.db_tools import get_all_schemas
 from agent_network.agents.agent_helper import agent_node
+from langchain.schema import SystemMessage
 
 
 def create_manager(llm, user_message: str, schema: str):
@@ -13,15 +14,11 @@ def create_manager(llm, user_message: str, schema: str):
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            (
-                "system",
-                MANAGER_AGENT_INSTRUCTIONS,
-            ),
+            SystemMessage(content=MANAGER_AGENT_INSTRUCTIONS),
+            SystemMessage(content=system_message),
             MessagesPlaceholder(variable_name="messages"),
-        ]
+        ]   
     )
-    
-    prompt = prompt.partial(system_message=system_message)
     
     message_payload = prompt.format_prompt(messages=[{
         "role": "user",

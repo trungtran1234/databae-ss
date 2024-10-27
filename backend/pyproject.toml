@@ -18,6 +18,13 @@ langchain-groq = "^0.2.0"
 langchain-community = "^0.3.3"
 langgraph = "^0.2.39"
 mysql-connector-python = "^9.1.0"
+langchain = "^0.3.4"
+langchain-openai = "^0.2.3"
+langsmith = "^0.1.137"
+pandas = "^2.2.3"
+langchain-experimental = "^0.3.2"
+matplotlib = "^3.9.2"
+langchain-core = "^0.3.13"
 
 
 [build-system]
