@@ -1,5 +1,4 @@
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from agent_network.static.instructions import ANALYZER_AGENT_INSTRUCTIONS
 from agent_network.static.llm import llm
 from agent_network.tools.table_tool import table_generator
 from agent_network.tools.pie_chart_tool import pie_chart_generator

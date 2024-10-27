@@ -1,3 +1,4 @@
+import os
 from langgraph.prebuilt import ToolNode
 from langgraph.graph import END, START, StateGraph
 from agents.agent_helper import AgentState
@@ -114,10 +115,15 @@ workflow.add_edge(START, "Manager")
 # Compile the graph
 graph = workflow.compile()
 
-# Save the graph as an image
-graph_image_path = "/Users/davelradindra/Projects/databae-ss/backend/agent_network/graph_updated.png"
+graph_image_path = os.path.join("agent_network", "graph_updated.png")
+
+# Generate and save the graph as an image
 png_data = graph.get_graph(xray=True).draw_mermaid_png()
 
+# Ensure the directory exists (create if not)
+os.makedirs(os.path.dirname(graph_image_path), exist_ok=True)
+
+# Save the image data to the defined path
 with open(graph_image_path, "wb") as file:
     file.write(png_data)
 
