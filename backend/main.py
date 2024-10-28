@@ -1,4 +1,5 @@
 
+import os
 from agent_network.agents.generator import generator_node
 from agent_network.agents.manager import manager_node
 from agent_network.agents.executor import executor_node
@@ -6,7 +7,6 @@ from agent_network.agents.checker import checker_node
 from agent_network.agents.respondent import respondent_node
 from langgraph.graph import END, START, StateGraph
 from agent_network.agents.agent_helper import AgentState, agent_node
-import functools
 from IPython.display import Image, display
 
 
@@ -46,11 +46,5 @@ def run_graph():
     workflow.add_edge("Manager", "Respondent")
     workflow.add_edge("Checker", "Executor")
     workflow.add_edge("Respondent", END)
-    return workflow.compile()
-
-
-def run_workflow(user_message, schema):
-    graph = run_graph()
-    initial_state = {"user_query": user_message, "schema": schema, "checkerCount": 0}
-    final_state = graph.invoke(initial_state)
-    return final_state['response']
+    
+    graph = workflow.compile()
