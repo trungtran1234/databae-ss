@@ -1,39 +1,37 @@
-import mysql.connector  # or any other database connector you're using
+import mysql.connector
 from agent_network.db.db_tools import create_connection
+from langgraph.graph import END
 def executor_node(state):
     """Executor Node to execute the SQL query and return the results."""
-
-    # Get the SQL query from the state
     sql_query = state.get("sql_query")
     
     if not sql_query:
-        # Handle the case where no valid SQL query was generated
         state["execution_result"] = {"error": "No SQL query generated"}
-        state["next"] = "user_respondent"
+        state["next"] = "Respondent" 
         return state
 
     try:
-        # Establish a connection to the database
         connection = create_connection()
-        cursor = connection.cursor(dictionary=True)  # Using dictionary=True to return results as a dict
+        cursor = connection.cursor(dictionary=True)
         
-        # Execute the query
         cursor.execute(sql_query)
         
-        # Fetch all the results
         result = cursor.fetchall()
 
-        # Store the results in the state
+        # store the results in the state
         state["execution_result"] = {
             "status": "success",
             "result": result
         }
 
-        # Decide the next node based on execution
-        if result:
-            state["next"] = "analyzer"  # Proceed to analyze the results
-        else:
-            state["next"] = "user_respondent"  # If no result, respond to the user
+        # End the flow here FOR NOW
+        state["next"] = END 
+
+        # uncomment this when you have the analyzer agent implemented
+        # if result:
+        #     state["next"] = "Analyzer"  # go to analyzer
+        # else:
+        #     state["next"] = "Manager"  # if no results, go back to manager
 
     except mysql.connector.Error as err:
         # Handle any SQL execution errors
@@ -41,13 +39,12 @@ def executor_node(state):
             "status": "error",
             "error": str(err)
         }
-        state["next"] = "user_respondent"  # If there's an error, return to user with error message
+        state["next"] = "Manager" # go back to manager if error
 
     finally:
-        # Close the database connection
         if 'connection' in locals() and connection.is_connected():
             cursor.close()
             connection.close()
 
-    print('execution result: ', state["execution_result"]["status"])
-    return state["execution_result"]
+    print('execution result: ', state["execution_result"])
+    return state

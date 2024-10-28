@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from agent_network.agents.agent_helper import QueryRequest
-from agent_network.static.llm import llm
+from agent_network.agents.agent_helper import AgentState, QueryRequest
 from pydantic import BaseModel
 from main import graph
 from agent_network.db.db_tools import check_and_add_db_credentials, get_all_schemas
@@ -20,14 +19,22 @@ def root():
     return "hello world"
 
 @app.post("/submit")
-def generate_sql(query_request: QueryRequest):
+def run_graph(query_request: QueryRequest):
     try:
-        user_message = HumanMessage(content=query_request.user_query)
-
+        initial_state: AgentState = {
+            "user_query": HumanMessage(content=query_request.user_query), 
+            "schema": get_all_schemas(),
+            "manager_instructions": "",
+            "sql_query": "",
+            "checker_status": "",
+            "checkerCount": 0,
+            "execution_result": {},
+            "analysis_result": {},
+            "response": "",
+            "sender": ""
+        }
         events = graph.stream(
-            {
-                "messages": [user_message],
-            },
+                initial_state,
             {"recursion_limit": 150}
         )
 
