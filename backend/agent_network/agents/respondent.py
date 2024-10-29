@@ -7,7 +7,6 @@ from langchain.schema import SystemMessage, HumanMessage
 def respondent_node(state):
     """User Respondent Node to respond to the user with appropriate messages."""
 
-
     if state['sender'] == 'Checker' and state.get("checkerCount", 0) > 3:
         # if there were too many checker failures, respond accordingly, edit this
         system_message = f"Too many checker failures. The user query is: {state['user_query']} \n The SQL that was generated was {state['sql_query']}"
@@ -37,4 +36,5 @@ def respondent_node(state):
     state["next"] = END 
 
     print("Response: ", state["response"])
+
     return state
