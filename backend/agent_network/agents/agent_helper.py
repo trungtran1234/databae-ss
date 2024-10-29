@@ -24,3 +24,4 @@ class AgentState(TypedDict):
     analysis_result: dict
     response: str
     sender: str
+    next: str

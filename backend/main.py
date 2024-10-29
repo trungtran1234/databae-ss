@@ -11,23 +11,18 @@ from IPython.display import Image, display
 
 def router(state):
     """
-    This function routes the workflow to the next node based on the current state.
-    It inspects the state and determines the next logical step.
+    Routes the workflow to the next node based on the 'next' field in the state.
+    This field should be set by each node to indicate where to go next.
     """
-    messages = state.get("messages", [])
-    if not messages:
-        return "continue"
-
-    last_message = messages[-1]
+    next_node = state.get("next")
     
-    # need to work on this logic for all possible routes, barebones FOR NOW
-    if "IS_QUERY" in last_message.content:
-        return "Query Generator"
-
-    if "Respondent" in last_message.content:
-        return "Respondent" 
+    if next_node:
+        # Route to the node specified in the 'next' field
+        return next_node
     
+    # Default to continue if no 'next' field is set
     return "continue"
+
 
 
 workflow = StateGraph(AgentState)
@@ -41,7 +36,7 @@ workflow.add_node("Respondent", respondent_node)
 # Manager go to Generator or respondent
 workflow.add_conditional_edges(
     "Manager", router, {
-        "continue": "Generator",
+        "Generator": "Generator",
         "Respondent": "Respondent",
     }
 )
@@ -49,14 +44,14 @@ workflow.add_conditional_edges(
 # Generator goes to checker
 workflow.add_conditional_edges(
     "Generator", router, {
-        "continue": "Checker",
+        "Checker": "Checker",
     }
 )
 
 # Checker can go to Executor or back to Manager
 workflow.add_conditional_edges(
     "Checker", router, {
-        "continue": "Executor",
+        "Executor": "Executor",
         "Manager": "Manager",
     }
 )

@@ -33,6 +33,6 @@ def checker_node(state):
         print("Checker failed, returning to manager.")
     else:
         print("Checker passed, moving to executor.")
-        state['next'] = "executor"
+        state['next'] = "Executor"
 
     return state
