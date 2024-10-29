@@ -3,6 +3,7 @@ from agent_network.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
 from agent_network.static.llm import llm
 from langchain.schema import SystemMessage, HumanMessage
 
+
 def generator_node(state):
     """Query Generator Agent to return an SQL query based on user's natural language input"""
     
@@ -30,3 +31,4 @@ def generator_node(state):
 
     print('generated sql query: ', state['sql_query'])
     return state
+

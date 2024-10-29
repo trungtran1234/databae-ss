@@ -1,4 +1,3 @@
-
 import os
 from agent_network.agents.generator import generator_node
 from agent_network.agents.manager import manager_node
@@ -52,7 +51,6 @@ workflow.add_conditional_edges(
 workflow.add_conditional_edges(
     "Checker", router, {
         "Executor": "Executor",
-        "Manager": "Manager",
     }
 )
 

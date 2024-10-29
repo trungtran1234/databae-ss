@@ -19,6 +19,7 @@ def manager_node(state):
         prompt = MANAGER_AGENT_INSTRUCTIONS + f"The given SQL query is not correct: {state['sql_query']}, give feedback on how to fix it. \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
     
     system_message = f"The following is the schema of the database: {state['schema']}. Use this schema to interpret the user query."
+
     prompt = ChatPromptTemplate.from_messages(
         [
             SystemMessage(content=MANAGER_AGENT_INSTRUCTIONS),
