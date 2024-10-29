@@ -20,8 +20,8 @@ def router(state):
         # Route to the node specified in the 'next' field
         return next_node
     
-    # Default to continue if no 'next' field is set
-    return "continue"
+    # if no 'next' field is set
+    return "no next field"
 
 
 
