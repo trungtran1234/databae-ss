@@ -1,6 +1,8 @@
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from agent_network.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
 from agent_network.static.llm import llm
+from langchain.schema import SystemMessage, HumanMessage
 from langchain.schema import SystemMessage, HumanMessage
 
 
@@ -14,6 +16,10 @@ def generator_node(state):
                 """
     prompt = ChatPromptTemplate.from_messages(
         [
+            SystemMessage(content=QUERY_GENERATOR_INSTRUCTIONS),
+            SystemMessage(content=system_message),
+            HumanMessage(content=state["user_query"].content), 
+        ]   
             SystemMessage(content=QUERY_GENERATOR_INSTRUCTIONS),
             SystemMessage(content=system_message),
             HumanMessage(content=state["user_query"].content), 

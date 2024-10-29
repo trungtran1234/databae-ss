@@ -1,4 +1,5 @@
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.prompts import ChatPromptTemplate
 from agent_network.static.instructions import MANAGER_AGENT_INSTRUCTIONS
 from agent_network.static.llm import llm
 from langchain.schema import SystemMessage, HumanMessage
@@ -24,6 +25,7 @@ def manager_node(state):
         [
             SystemMessage(content=MANAGER_AGENT_INSTRUCTIONS),
             SystemMessage(content=system_message),
+            HumanMessage(content=state["user_query"].content), 
             HumanMessage(content=state["user_query"].content), 
         ]   
     )

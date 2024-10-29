@@ -15,22 +15,22 @@ output_dir = "generated_analysis"
 os.makedirs(output_dir, exist_ok=True)
 
 @tool
-def generate_pie_chart(
-    code: Annotated[str, "The python code to execute to generate your pie chart."]
+def generate_bar_chart(
+    code: Annotated[str, "The python code to execute to generate your bar chart."]
 ):
-    """Use this tool to generate a pie chart from Python code and save it to a file."""
+    """Use this tool to generate a bar chart from Python code and save it to a file."""
     try:
         repl.run(code)
+        print("bar chart code executed")
 
-        print("pie chart code executed")
-
-        file_name = "pie_chart.png"  
+        file_name = "bar_chart.png" 
         file_path = os.path.join(output_dir, file_name)
 
         plt.savefig(file_path)
         plt.close()
 
-        return f"Successfully generated pie chart and saved to {file_path}"
+        
+        return f"Successfully generated bar chart and saved to {file_path}"
 
     except BaseException as e:
         return f"Failed to execute. Error: {repr(e)}"
