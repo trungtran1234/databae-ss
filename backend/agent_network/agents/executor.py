@@ -41,8 +41,9 @@ def executor_node(state):
             "status": "error",
             "error": str(err)
         }
-        state["sender"] = "Executor"
+        state["sender"] = "Checker"
         state["next"] = "Manager" # go back to manager if error
+        state["checkerCount"] += 1 # increment checker count    
 
     finally:
         if 'connection' in locals() and connection.is_connected():
