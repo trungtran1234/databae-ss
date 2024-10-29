@@ -1,32 +1,46 @@
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langgraph.graph import END, START, StateGraph
+from langchain_core.prompts import ChatPromptTemplate
 from agent_network.static.instructions import MANAGER_AGENT_INSTRUCTIONS
 from agent_network.static.llm import llm
-from agent_network.db.db_tools import get_all_schemas
-from agent_network.agents.agent_helper import agent_node
-from langchain.schema import SystemMessage
+from langchain.schema import SystemMessage, HumanMessage
 
-
-def create_manager(llm, user_message: str, schema: str):
-    """Manager Agent to return if the user query is requesting SQL query or general information"""
+def manager_node(state):
+    """Manager Agent to handle SQL query generation and manage the checker loop."""
     
-    system_message = f"The following is the schema of the database: {schema}. Use this schema to interpret the user query."
+    print("Manager node started.")
+    print('')
+    # check if checker has failed over 3 times
+    if state.get("sender") == 'Checker' and state.get("checkerCount") > 3:
+        print("Too many checker failures, sending to user respondent.")
+        state["sender"] = "Manager"
+        state["next"] = "Respondent"
+        return state
+    
+    system_message = f"The following is the schema of the database: {state['schema']}. Use this schema to interpret the user query."
+
+    if state.get("sender") == 'Checker':
+        system_message = f"The given SQL query is not correct: {state['sql_query']}, give feedback on how to fix it. \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
 
     prompt = ChatPromptTemplate.from_messages(
         [
             SystemMessage(content=MANAGER_AGENT_INSTRUCTIONS),
             SystemMessage(content=system_message),
-            MessagesPlaceholder(variable_name="messages"),
+            HumanMessage(content=state["user_query"].content), 
         ]   
     )
-    
-    message_payload = prompt.format_prompt(messages=[{
-        "role": "user",
-        "content": user_message 
-    }]).to_messages()
-    
-    response = llm.invoke(message_payload)
+    prompt = prompt.partial(system_message=system_message)
+
+    response = llm.invoke(prompt.format())
     
     manager_response = response.content.strip()
-    
-    return manager_response
+    state["manager_instructions"] = manager_response
+
+    print('Manager instructions: ', state['manager_instructions'])
+
+    state["sender"] = "Manager"
+    if "NOT_QUERY" in state["manager_instructions"]:
+        state["next"] = "Respondent"
+    else:
+        print("Sending to generator.")
+        state["next"] = "Generator"
+
+    return state

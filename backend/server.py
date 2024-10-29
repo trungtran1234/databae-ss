@@ -1,9 +1,9 @@
 from fastapi import FastAPI, HTTPException
-from agent_network.agents.agent_helper import QueryRequest
-from agent_network.agents.manager import create_manager
-from agent_network.static.llm import llm
+from agent_network.agents.agent_helper import AgentState, QueryRequest
 from pydantic import BaseModel
+from main import graph
 from agent_network.db.db_tools import check_and_add_db_credentials, get_all_schemas
+from langchain_core.messages import HumanMessage
 
 app = FastAPI()
 
@@ -19,15 +19,31 @@ def root():
     return "hello world"
 
 @app.post("/submit")
-def generate_sql(query_request: QueryRequest):
+def run_graph(query_request: QueryRequest):
     try:
-        schema = get_all_schemas()
-        sql_query = create_manager(
-            llm=llm, 
-            user_message=query_request.user_query,
-            schema=schema
+        initial_state: AgentState = {
+            "user_query": HumanMessage(content=query_request.user_query), 
+            "schema": get_all_schemas(),
+            "manager_instructions": "",
+            "sql_query": "",
+            "checker_status": "",
+            "checkerCount": 0,
+            "execution_result": {},
+            "analysis_result": {},
+            "response": "",
+            "sender": ""
+        }
+        events = graph.stream(
+                initial_state,
+            {"recursion_limit": 150}
         )
-        return {"sql_query": sql_query}
+
+        result = []
+
+        for event in events:
+            result.append(str(event))
+
+        return {"result": result} 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
