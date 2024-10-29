@@ -34,7 +34,7 @@ def executor_node(state):
         }
         state["sender"] = "Executor"
         # End the flow here FOR NOW
-        state["next"] = END 
+        state["next"] = "Analyzer"
 
         # uncomment this when you have the analyzer agent implemented
         # if result:

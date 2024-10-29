@@ -25,8 +25,7 @@ def manager_node(state):
         [
             SystemMessage(content=MANAGER_AGENT_INSTRUCTIONS),
             SystemMessage(content=system_message),
-            HumanMessage(content=state["user_query"].content), 
-            HumanMessage(content=state["user_query"].content), 
+            HumanMessage(content=state["user_query"].content)
         ]   
     )
     prompt = prompt.partial(system_message=system_message)

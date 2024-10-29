@@ -20,10 +20,6 @@ def generator_node(state):
             SystemMessage(content=system_message),
             HumanMessage(content=state["user_query"].content), 
         ]   
-            SystemMessage(content=QUERY_GENERATOR_INSTRUCTIONS),
-            SystemMessage(content=system_message),
-            HumanMessage(content=state["user_query"].content), 
-        ]   
     )
     prompt = prompt.partial(system_message=system_message)
 

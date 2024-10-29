@@ -71,6 +71,7 @@ workflow.add_conditional_edges(
 workflow.add_conditional_edges(
     "Executor", router, {
         "Analyzer": "Analyzer",
+        "Manager": "Manager",
     }
 )
 
