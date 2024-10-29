@@ -3,11 +3,10 @@ from agent_network.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
 from agent_network.static.llm import llm
 from langchain.schema import SystemMessage, HumanMessage
 
-
 def generator_node(state):
     """Query Generator Agent to return an SQL query based on user's natural language input"""
     
-    system_message =  f"""
+    system_message = f"""
                 The following is the schema of the database: {state['schema']}.
                 Additionally, here are specialized instructions based on the user query: {state['manager_instructions']}
                 Use these details to generate an SQL query that fulfills the user's request.
@@ -31,4 +30,3 @@ def generator_node(state):
 
     print('generated sql query: ', state['sql_query'])
     return state
-

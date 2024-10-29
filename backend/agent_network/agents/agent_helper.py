@@ -21,7 +21,7 @@ class AgentState(TypedDict):
     checker_status: str
     checkerCount: int
     execution_result: dict
-    analysis_result: dict
+    analysis_result: list
     response: str
     sender: str
     next: str

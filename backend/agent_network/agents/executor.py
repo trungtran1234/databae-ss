@@ -19,21 +19,27 @@ def executor_node(state):
         
         result = cursor.fetchall()
 
+        # if not result:
+        #     state["execution_result"] = {
+        #         "status": "success",
+        #         "result": "No results found"
+        #     }
+        #     state["next"] = "Manager"
+        # add this later
+
         # store the results in the state
         state["execution_result"] = {
             "status": "success",
             "result": result
         }
 
-        # End the flow here FOR NOW
-        state["next"] = END 
+      
 
-        # uncomment this when you have the analyzer agent implemented
-        # if result:
-        #     state["next"] = "Analyzer"  # go to analyzer
-        # else:
-        #     state["next"] = "Manager"  # if no results, go back to manager
-
+        if result:
+            state["next"] = "Analyzer"  # go to analyzer
+        else:
+            state["next"] = "Respondent"  # if no results, go back to Respondent
+            
     except mysql.connector.Error as err:
         # Handle any SQL execution errors
         state["execution_result"] = {
