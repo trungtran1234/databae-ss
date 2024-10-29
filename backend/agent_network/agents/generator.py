@@ -21,7 +21,7 @@ def generator_node(state):
     )
     prompt = prompt.partial(system_message=system_message)
 
-    response = llm.invoke(prompt.format())
+    response = llm.invoke(prompt.format_messages())
     
     sql_query = response.content.strip()
     
