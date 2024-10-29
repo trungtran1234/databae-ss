@@ -60,7 +60,7 @@ workflow.add_edge("Executor", END)
 
 workflow.add_conditional_edges("Executor", router, {
     END: END,
-    "Manager": "Manager"
+    "Respondent": "Respondent"
 })
 
 #uncomment this when entire flow is implemented

@@ -11,6 +11,7 @@ def executor_node(state):
         state["sender"] = "Executor"
         state["next"] = "Respondent" 
         return state
+        
 
     try:
         connection = create_connection()
@@ -20,6 +21,12 @@ def executor_node(state):
         
         result = cursor.fetchall()
 
+        if len(result) == 0:
+            state["sender"] = "Executor"
+            state["next"] = "Respondent" # go back to manager if error
+            state["checkerCount"] += 1 # increment checker count   
+            return state 
+            
         # store the results in the state
         state["execution_result"] = {
             "status": "success",
