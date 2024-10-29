@@ -29,7 +29,7 @@ def manager_node(state):
     )
     prompt = prompt.partial(system_message=system_message)
 
-    response = llm.invoke(prompt.format())
+    response = llm.invoke(prompt.format_messages())
     
     manager_response = response.content.strip()
     state["manager_instructions"] = manager_response
