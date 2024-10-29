@@ -11,7 +11,7 @@ def manager_node(state):
     # check if checker has failed over 3 times
     if state.get("sender") == 'Checker' and state.get("checkerCount") > 3:
         print("Too many checker failures, sending to user respondent.")
-        state["sender"] = "Manager"
+        state["sender"] = "Checker"
         state["next"] = "Respondent"
         return state
     
