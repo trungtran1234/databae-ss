@@ -33,8 +33,8 @@ def respondent_node(state):
 
     response = llm.invoke(prompt.format())
 
-    state["response"] = response
+    state["response"] = response.content.strip()
     state["next"] = END 
 
-    print("Response: ", response)
+    print("Response: ", state["response"])
     return state
