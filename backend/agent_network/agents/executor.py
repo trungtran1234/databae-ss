@@ -8,6 +8,7 @@ def executor_node(state):
     
     if not sql_query:
         state["execution_result"] = {"error": "No SQL query generated"}
+        state["sender"] = "Executor"
         state["next"] = "Respondent" 
         return state
 
@@ -24,7 +25,7 @@ def executor_node(state):
             "status": "success",
             "result": result
         }
-
+        state["sender"] = "Executor"
         # End the flow here FOR NOW
         state["next"] = END 
 
@@ -40,6 +41,7 @@ def executor_node(state):
             "status": "error",
             "error": str(err)
         }
+        state["sender"] = "Executor"
         state["next"] = "Manager" # go back to manager if error
 
     finally:

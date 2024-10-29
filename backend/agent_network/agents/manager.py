@@ -9,15 +9,16 @@ def manager_node(state):
     print("Manager node started.")
     print('')
     # check if checker has failed over 3 times
-    if state.get("checkerCount") > 3:
+    if state.get("sender") == 'Checker' and state.get("checkerCount") > 3:
         print("Too many checker failures, sending to user respondent.")
+        state["sender"] = "Manager"
         state["next"] = "Respondent"
         return state
     
     system_message = f"The following is the schema of the database: {state['schema']}. Use this schema to interpret the user query."
 
     if state.get("sender") == 'Checker':
-        system_message = MANAGER_AGENT_INSTRUCTIONS + f"The given SQL query is not correct: {state['sql_query']}, give feedback on how to fix it. \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
+        system_message = f"The given SQL query is not correct: {state['sql_query']}, give feedback on how to fix it. \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -35,6 +36,7 @@ def manager_node(state):
 
     print('Manager instructions: ', state['manager_instructions'])
 
+    state["sender"] = "Manager"
     if "NOT_QUERY" in state["manager_instructions"]:
         state["next"] = "Respondent"
     else:

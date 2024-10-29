@@ -23,13 +23,13 @@ def checker_node(state):
     state['checker_status'] = checker_response
 
     print('checker response: ', state['checker_status'])
-
+    
+    state['sender'] = "Checker"
     # if the checker fails, return to manager node, otherwise move to execution
     if state["checker_status"] == "CHECKER_FAILED":
         print('Checker failed!')
         state['next'] = "manager"
         state['checkerCount'] += 1 # increment checker count
-        state['sender'] = "Checker"
         print("Checker failed, returning to manager.")
     else:
         print("Checker passed, moving to executor.")

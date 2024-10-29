@@ -27,6 +27,7 @@ def generator_node(state):
     
     state["sql_query"] = sql_query
 
+    state["sender"] = "Generator"
     state["next"] = "Checker"
 
     print('generated sql query: ', state['sql_query'])
