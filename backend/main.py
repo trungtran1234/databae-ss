@@ -51,6 +51,7 @@ workflow.add_conditional_edges(
 workflow.add_conditional_edges(
     "Checker", router, {
         "Executor": "Executor",
+        "Manager": "Manager",
     }
 )
 
