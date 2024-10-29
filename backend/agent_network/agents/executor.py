@@ -11,6 +11,7 @@ def executor_node(state):
         state["sender"] = "Executor"
         state["next"] = "Respondent" 
         return state
+        
 
     try:
         connection = create_connection()
@@ -20,6 +21,12 @@ def executor_node(state):
         
         result = cursor.fetchall()
 
+        if len(result) == 0:
+            state["sender"] = "Executor"
+            state["next"] = "Respondent" # go back to manager if error
+            state["checkerCount"] += 1 # increment checker count   
+            return state 
+            
         # store the results in the state
         state["execution_result"] = {
             "status": "success",
@@ -27,7 +34,7 @@ def executor_node(state):
         }
         state["sender"] = "Executor"
         # End the flow here FOR NOW
-        state["next"] = END 
+        state["next"] = "Analyzer"
 
         # uncomment this when you have the analyzer agent implemented
         # if result:
@@ -41,8 +48,9 @@ def executor_node(state):
             "status": "error",
             "error": str(err)
         }
-        state["sender"] = "Executor"
+        state["sender"] = "Checker"
         state["next"] = "Manager" # go back to manager if error
+        state["checkerCount"] += 1 # increment checker count    
 
     finally:
         if 'connection' in locals() and connection.is_connected():
