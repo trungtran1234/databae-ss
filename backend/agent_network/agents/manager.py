@@ -14,11 +14,10 @@ def manager_node(state):
         state["next"] = "Respondent"
         return state
     
-    # neeed to edit this logic
-    if state.get("sender") == 'Checker':
-        prompt = MANAGER_AGENT_INSTRUCTIONS + f"The given SQL query is not correct: {state['sql_query']}, give feedback on how to fix it. \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
-    
     system_message = f"The following is the schema of the database: {state['schema']}. Use this schema to interpret the user query."
+
+    if state.get("sender") == 'Checker':
+        system_message = MANAGER_AGENT_INSTRUCTIONS + f"The given SQL query is not correct: {state['sql_query']}, give feedback on how to fix it. \nThe user query is: {state['user_query']}\n The schema is: {state['schema']}"
 
     prompt = ChatPromptTemplate.from_messages(
         [

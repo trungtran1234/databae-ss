@@ -7,7 +7,7 @@ def checker_node(state):
     """Checker Node to validate the SQL query before execution."""
     print("Checker node started with given state: ", state)
 
-    system_message = CHECKER_AGENT_INSTRUCTIONS + f"\nUser query: {state['user_query']}\nSchema:{state['schema']}\nSQL Query: {state['sql_query']}"
+    system_message = f"\nUser query: {state['user_query']}\nSchema:{state['schema']}\nSQL Query: {state['sql_query']}"
     prompt = ChatPromptTemplate.from_messages(
         [
             SystemMessage(content=CHECKER_AGENT_INSTRUCTIONS),

@@ -1,6 +1,7 @@
 import mysql.connector
 from agent_network.db.db_tools import create_connection
 from langgraph.graph import END
+
 def executor_node(state):
     """Executor Node to execute the SQL query and return the results."""
     sql_query = state.get("sql_query")
