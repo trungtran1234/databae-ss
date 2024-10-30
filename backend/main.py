@@ -33,7 +33,7 @@ def router(state):
     return "no next field"
 
 tools = [generate_table, generate_pie_chart, generate_bar_chart]
-# tool_node = ToolNode(tools)
+tool_node = ToolNode(tools)
 
 workflow = StateGraph(AgentState)
 workflow.add_edge(START, "Manager")
@@ -43,6 +43,7 @@ workflow.add_node("Executor", executor_node)
 workflow.add_node("Checker", checker_node)
 workflow.add_node("Respondent", respondent_node)
 workflow.add_node("Analyzer", functools.partial(analyzer_node, tools=tools))
+workflow.add_node("Analyzer_Tools", tool_node)
 # workflow.add_node("Tools", tool_node)
 
 # Manager go to Generator or respondent
@@ -76,21 +77,23 @@ workflow.add_conditional_edges(
     }
 )
 
-# workflow.add_conditional_edges(
-#     "Analyzer", router, {
-#         "Tools": "Tools",
-#         "END": END,
-#     }
-# )
+workflow.add_conditional_edges(
+    "Analyzer", router, {
+        "Analyzer_Tools": "Analyzer_Tools",
+        "END": END,
+    }
+)
 
-# workflow.add_conditional_edges(
-#     "Tools", router, {
-#         "Analyzer": "Analyzer",
-#     }
-# )
+workflow.add_conditional_edges(
+    "Analyzer_Tools", 
+    lambda x: x["sender"], 
+    {
+        "Analyzer": "Analyzer",
+    }
+)
 
 #end at executor for now
-workflow.add_edge("Analyzer", END)
+# workflow.add_edge("Analyzer", END)
 
 #uncomment this when entire flow is implemented
 #workflow.add_edge("Respondent", END)
