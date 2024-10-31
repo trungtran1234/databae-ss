@@ -5,8 +5,22 @@ from langchain.schema import SystemMessage, HumanMessage
 from agent_network.static.llm import llm
 import json
 from langgraph.graph import END
+from langchain_core.messages import (
+    BaseMessage,
+    HumanMessage,
+    ToolMessage,
+    AIMessage
+)
+
 def analyzer_node(state, tools):
     """Analyzer Node to analyze the results of the SQL query execution and choose the appropriate tool to analyze the query results."""
+    print("is tool called? ", state.get("tool_called", "no"))
+    print("HEY IM IN ANALYZER NODE")
+
+    if state["tool_called"] == True:
+        # The user has already called a tool, so we don't need to analyze the results again
+        state["next"] = "END"
+        return state
 
     
 
@@ -17,7 +31,7 @@ def analyzer_node(state, tools):
         [
             SystemMessage(content=ANALYZER_AGENT_INSTRUCTIONS),
             SystemMessage(content=system_message),
-            HumanMessage(content="Here are the tools available for you to use: {tool_names}"),  
+            HumanMessage(content="Here are the tools available for you to use: {tool_names}. If you are done using the tools, have you response start with FINAL_ANSWER, otherwise do not"),  
         ]
     )
 
@@ -27,22 +41,19 @@ def analyzer_node(state, tools):
     bound_llm = llm.bind_tools(tools)
     response = bound_llm.invoke(formated)
 
-    tool_calls = response.tool_calls
+    state["analyzer_tool_calls"] = response.tool_calls
+    state["analyzer_response_content"] = response.content
 
-    if tool_calls:
-        for tool_call in tool_calls:
-            tool_name = tool_call['name']
-            tool_args = tool_call['args']
+    # Prepare messages for the ToolNode
+    state["analyzer_messages"] = [AIMessage(content=state["analyzer_response_content"], tool_calls=state["analyzer_tool_calls"])]
 
-            for tool in tools:
-                if tool.name == tool_name:
-                    tool_result = tool(tool_args['code'])  
-
-                    state["analysis_result"] = tool_result
-                    state["next"] = END
-
-                    print(f"Tool {tool_name} executed with result: {tool_result}")
-                    break
+    # Determine the next node based on whether there are tool calls
+    if response.tool_calls:
+        state["tool_called"] = True
+        state["next"] = "Analyzer_Tools"
+    else:
+        state["next"] = "END"
+    state["sender"] = "Analyzer"
 
     return state
 

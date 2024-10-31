@@ -13,6 +13,9 @@ from langgraph.prebuilt import ToolNode
 from agent_network.tools.pie_chart_tool import generate_pie_chart
 from agent_network.tools.table_tool import generate_table
 from agent_network.tools.bar_chart_tool import generate_bar_chart
+from langchain_core.messages import (
+    AIMessage
+)
 
 
 def router(state):
@@ -21,19 +24,27 @@ def router(state):
     This field should be set by each node to indicate where to go next.
     """
     next_node = state.get("next")
-
     
     if next_node:
         # Route to the node specified in the 'next' field
         return next_node
-    
-    
-    
+
     # if no 'next' field is set
     return "no next field"
 
 tools = [generate_table, generate_pie_chart, generate_bar_chart]
 tool_node = ToolNode(tools)
+
+def analyzer_tools_node(state):
+    # Use the messages prepared in the analyzer_node
+    messages = state["analyzer_messages"]
+    # Invoke the ToolNode
+    result = tool_node.invoke(messages)
+    # Update the state with the results
+    state["analysis_result"] = result
+    # Decide what to do next (in this case, end the workflow)
+    state["next"] = END
+    return state
 
 workflow = StateGraph(AgentState)
 workflow.add_edge(START, "Manager")
@@ -43,7 +54,7 @@ workflow.add_node("Executor", executor_node)
 workflow.add_node("Checker", checker_node)
 workflow.add_node("Respondent", respondent_node)
 workflow.add_node("Analyzer", functools.partial(analyzer_node, tools=tools))
-workflow.add_node("Analyzer_Tools", tool_node)
+workflow.add_node("Analyzer_Tools", analyzer_tools_node)
 # workflow.add_node("Tools", tool_node)
 
 # Manager go to Generator or respondent

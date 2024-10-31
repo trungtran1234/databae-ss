@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing_extensions import TypedDict
-from typing import Annotated, Sequence
+from typing import Annotated, Sequence, List
 from langchain_core.messages import (
     BaseMessage,
     HumanMessage,
@@ -22,6 +22,10 @@ class AgentState(TypedDict):
     checkerCount: int
     execution_result: dict
     analysis_result: list
+    analyzer_messages: str
+    analyzer_tool_calls: List[dict]
+    analyzer_response_content: str = ""
+    tool_called: bool 
     response: str
     sender: str
     next: str
