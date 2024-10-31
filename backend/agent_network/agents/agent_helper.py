@@ -25,7 +25,7 @@ class AgentState(TypedDict):
     analyzer_messages: str
     analyzer_tool_calls: List[dict]
     analyzer_response_content: str = ""
-    tool_called: bool 
+    tool_called: bool = False
     response: str
     sender: str
     next: str

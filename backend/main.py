@@ -43,7 +43,7 @@ def analyzer_tools_node(state):
     # Update the state with the results
     state["analysis_result"] = result
     # Decide what to do next (in this case, end the workflow)
-    state["next"] = END
+    state["next"] = "Analyzer"
     return state
 
 workflow = StateGraph(AgentState)

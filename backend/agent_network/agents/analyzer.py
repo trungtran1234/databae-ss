@@ -17,12 +17,13 @@ def analyzer_node(state, tools):
     print("is tool called? ", state.get("tool_called", "no"))
     print("HEY IM IN ANALYZER NODE")
 
-    if state["tool_called"] == True:
+    if state.get("tool_called", False) == True:
         # The user has already called a tool, so we don't need to analyze the results again
+        
         state["next"] = "END"
         return state
-
     
+    print("HEY IM IN ANALYZER NODE 2")
 
     system_message = f"\nUser query: {state['user_query'].content}\nResult: {state['execution_result']['result']} \n"
 
@@ -47,10 +48,14 @@ def analyzer_node(state, tools):
     # Prepare messages for the ToolNode
     state["analyzer_messages"] = [AIMessage(content=state["analyzer_response_content"], tool_calls=state["analyzer_tool_calls"])]
 
+    print("HEY IM IN ANALYZER NODE 3")
+
     # Determine the next node based on whether there are tool calls
     if response.tool_calls:
+        print("HEY IM IN if response.tool_calls")
         state["tool_called"] = True
         state["next"] = "Analyzer_Tools"
+        print("HEY I FINISHED if response.tool_calls")
     else:
         state["next"] = "END"
     state["sender"] = "Analyzer"
