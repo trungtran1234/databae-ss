@@ -51,7 +51,6 @@ def check_and_add_db_credentials(host_name, user_name, user_password, port, db_n
             password=user_password,
             port=port,
             database=db_name,
-            ssl_disabled=True
         )
         if connection:
             print("Connection to MySQL DB successful")

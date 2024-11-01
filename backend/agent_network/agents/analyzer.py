@@ -10,18 +10,16 @@ def analyzer_node(state, tools):
 
     
 
-    system_message = f"\nUser query: {state['user_query'].content}\nResult: {state['execution_result']['result']}"
+    system_message = f"\nUser query: {state['user_query'].content}\nResult: {state['execution_result']['result']} \n"
 
 
     prompt = ChatPromptTemplate.from_messages(
         [
             SystemMessage(content=ANALYZER_AGENT_INSTRUCTIONS),
             SystemMessage(content=system_message),
-            HumanMessage(content=state["user_query"].content),  
+            HumanMessage(content="Here are the tools available for you to use: {tool_names}"),  
         ]
     )
-    
-   
 
     formated = prompt.format_messages(system_message=system_message, tool_names=", ".join([tool.name for tool in tools]))
 

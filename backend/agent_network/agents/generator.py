@@ -4,6 +4,7 @@ from agent_network.static.instructions import QUERY_GENERATOR_INSTRUCTIONS
 from agent_network.static.llm import llm
 from langchain.schema import SystemMessage, HumanMessage
 from langchain.schema import SystemMessage, HumanMessage
+import re
 
 
 def generator_node(state):
@@ -25,8 +26,11 @@ def generator_node(state):
 
     response = llm.invoke(prompt.format_messages())
     
-    sql_query = response.content.strip()
-    
+    match = re.search(r"```(.*?)```", response.content, re.DOTALL)
+    if match:
+        sql_query = match.group(1).strip()
+    else:
+        sql_query = response.content.strip()
     state["sql_query"] = sql_query
 
     state["sender"] = "Generator"
