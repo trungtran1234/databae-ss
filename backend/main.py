@@ -44,6 +44,7 @@ workflow.add_node("Checker", checker_node)
 workflow.add_node("Respondent", respondent_node)
 workflow.add_node("Analyzer", functools.partial(analyzer_node, tools=tools))
 workflow.add_node("Analyzer_Tools", tool_node)
+
 # workflow.add_node("Tools", tool_node)
 
 # Manager go to Generator or respondent

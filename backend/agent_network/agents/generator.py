@@ -6,6 +6,7 @@ from langchain.schema import SystemMessage, HumanMessage
 from langchain.schema import SystemMessage, HumanMessage
 import re
 
+
 def generator_node(state):
     """Query Generator Agent to return an SQL query based on user's natural language input"""
     
