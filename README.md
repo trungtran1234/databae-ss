@@ -2,7 +2,8 @@
 Databae is your personal AI assistant when it comes to being able to explore and analyze your SingleStore database with human language. Tell Databae what you want to query your SingleStore database in human language, and Databae will automatically query the database, analyze the dataset, and visualize the results for you to understand.
 
 ## Diagram
-<img src="https://github.com/user-attachments/assets/cb7e0d4d-fae8-4bea-bcdf-f2a91b8f8bb5" width="500" title="Ray Romano saying What do you think?" alt="Ray Romano saying What do you think?"/>
+![image](https://github.com/user-attachments/assets/5bc650ef-0abe-4fc8-96c6-43430f4c0fd8)
+
 
 ## Instructions 
 ### Frontend 
